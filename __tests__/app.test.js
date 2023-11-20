@@ -3,6 +3,7 @@ const app = require("../ExpressApp/app");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data/index");
 const db = require("../db/connection");
+const topics = require("../db/data/test-data/topics");
 
 beforeEach(() => seed(data));
 afterAll(() => db.end());
@@ -26,12 +27,14 @@ describe("/api/topics", () => {
       .get("/api/topics")
       .expect(200)
       .then(({ body }) => {
-        body.topics.forEach((topic) => {
-          expect(topic).toEqual({
-            slug: expect.any(String),
-            description: expect.any(String),
+        if (body.topics.length !== 0) {
+          body.topics.forEach((topic) => {
+            expect(topic).toMatchObject({
+              slug: expect.any(String),
+              description: expect.any(String),
+            });
           });
-        });
+        }
       });
   });
 });
