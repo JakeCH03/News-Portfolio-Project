@@ -37,3 +37,16 @@ describe("/api/topics", () => {
       });
   });
 });
+
+// describe("/api/articles/:article_id", () => {
+//     test.only("/api/articles/:article_id should return the correct object from the id given", () => {
+//         return request(app)
+//         .get("/api/articles/4")
+//         .expect(200)
+//         .then(({body}) => {
+//             expect(body.article).toEqual({
+
+//             })
+//         })
+//     })
+// })
