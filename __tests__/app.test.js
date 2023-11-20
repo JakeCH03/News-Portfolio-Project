@@ -60,7 +60,7 @@ describe("/api", () => {
 });
 
 describe("/api/articles/:article_id", () => {
-  test.only("200: GET /api/articles/:article_id should return the correct object from the id given", () => {
+  test("200: GET /api/articles/:article_id should return the correct object from the id given", () => {
     return request(app)
       .get("/api/articles/4")
       .expect(200)
@@ -78,7 +78,7 @@ describe("/api/articles/:article_id", () => {
         });
       });
   });
-  test.only("404: GET /api/articles/:article_id should return Not Found if passed an id that doesn't exist", () => {
+  test("404: GET /api/articles/:article_id should return Not Found if passed an id that doesn't exist", () => {
     return request(app)
       .get("/api/articles/9876")
       .expect(404)
@@ -86,7 +86,7 @@ describe("/api/articles/:article_id", () => {
         expect(body.msg).toBe("Not Found");
       });
   });
-  test.only("400: GET /api/articles/:article_id should return Bad Request if passed an id that is not a number", () => {
+  test("400: GET /api/articles/:article_id should return Bad Request if passed an id that is not a number", () => {
     return request(app)
       .get("/api/articles/hi")
       .expect(400)
