@@ -25,5 +25,23 @@
         }
       ]
     }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "returns an array of the article requested by id",
+    "queries": [],
+    "exampleResponse": {
+      "article": [
+        {
+          "article_id": 4,
+          "title": "Making sense of Redux",
+          "topic": "coding",
+          "author": "jessjelly",
+          "body": "Text from article...",
+          "created_at": "2020-09-11T20:12:00.000Z",
+          "votes": 0,
+          "article_img_url": "https://images.pexels.com/photos/4974912/pexels-photo-4974912.jpeg?w=700&h=700"
+        }
+      ]
+    }
   }
 }
