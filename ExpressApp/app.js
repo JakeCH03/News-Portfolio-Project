@@ -10,8 +10,6 @@ const { invalidInput } = require("./sql-db-errors");
 
 const app = express();
 
-app.use(express.json());
-
 app.get("/api/healthcheck", getApiHealth);
 
 app.get("/api/topics", getApiTopics);
