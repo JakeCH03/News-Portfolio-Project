@@ -59,3 +59,39 @@ describe("/api", () => {
   });
 });
 
+describe("/api/articles/:article_id", () => {
+  test("200: GET /api/articles/:article_id should return the correct object from the id given", () => {
+    return request(app)
+      .get("/api/articles/4")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article[0]).toMatchObject({
+          article_id: 4,
+          title: "Student SUES Mitch!",
+          topic: "mitch",
+          author: "rogersop",
+          body: "We all love Mitch and his wonderful, unique typing style. However, the volume of his typing has ALLEGEDLY burst another students eardrums, and they are now suing for damages",
+          created_at: "2020-05-06T01:14:00.000Z",
+          votes: 0,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+      });
+  });
+  test("404: GET /api/articles/:article_id should return Not Found if passed an id that doesn't exist", () => {
+    return request(app)
+      .get("/api/articles/9876")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  test("400: GET /api/articles/:article_id should return Bad Request if passed an id that is not a number", () => {
+    return request(app)
+      .get("/api/articles/hi")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+});
