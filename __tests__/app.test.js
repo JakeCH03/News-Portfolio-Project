@@ -27,13 +27,15 @@ describe("/api/topics", () => {
       .get("/api/topics")
       .expect(200)
       .then(({ body }) => {
-        if (body.topics.length !== 0) {
+        if (body.topics.length === 3) {
           body.topics.forEach((topic) => {
             expect(topic).toMatchObject({
               slug: expect.any(String),
               description: expect.any(String),
             });
           });
+        } else {
+            throw new Error("Array is empty");
         }
       });
   });
