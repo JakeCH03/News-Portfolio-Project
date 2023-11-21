@@ -183,3 +183,46 @@ describe("/api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("200: PATCH /api/articles/:article_id should respond with an updated article with votes increased/decreased by provided value", () => {
+    const votes = { inc_votes: 5 };
+    return request(app)
+      .patch("/api/articles/4")
+      .send(votes)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article[0].votes).toBe(5);
+        expect(body.article[0]).toMatchObject({
+          article_id: expect.any(Number),
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url: expect.any(String),
+        });
+      });
+  });
+  test("404: Should return Not Found if article_id passed does not exist", () => {
+    const votes = { inc_votes: 5 };
+    return request(app)
+      .patch("/api/articles/123")
+      .send(votes)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  test("400: Should return Bad Request if passed votes is not a number", () => {
+    const votes = { inc_votes: "hello" };
+    return request(app)
+      .patch("/api/articles/4")
+      .send(votes)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+});

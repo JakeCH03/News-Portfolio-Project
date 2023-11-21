@@ -9,10 +9,13 @@ const {
   getArticleById,
   getArticles,
   getArticleComments,
+  handleVoteCounter,
 } = require("./controllers/api-articles-controller");
 const { invalidInput } = require("./sql-db-errors");
 
 const app = express();
+
+app.use(express.json());
 
 app.get("/api/healthcheck", getApiHealth);
 
@@ -25,6 +28,8 @@ app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles", getArticles);
 
 app.get("/api/articles/:article_id/comments", getArticleComments);
+
+app.patch("/api/articles/:article_id", handleVoteCounter);
 
 app.all("*", handleNotFound);
 
