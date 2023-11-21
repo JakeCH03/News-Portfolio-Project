@@ -49,7 +49,6 @@ exports.getAllComments = (id) => {
 };
 
 exports.updateVotes = ({ inc_votes }, id) => {
-  console.log(inc_votes)
   return db.query(
     `
   UPDATE articles
