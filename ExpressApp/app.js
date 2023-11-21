@@ -8,10 +8,13 @@ const { getApiTopics } = require("./controllers/api-topics-controller");
 const {
   getArticleById,
   getArticles,
+  postNewComment,
 } = require("./controllers/api-articles-controller");
 const { invalidInput } = require("./sql-db-errors");
 
 const app = express();
+
+app.use(express.json());
 
 app.get("/api/healthcheck", getApiHealth);
 
@@ -22,6 +25,8 @@ app.get("/api", getApiEndpoints);
 app.get("/api/articles/:article_id", getArticleById);
 
 app.get("/api/articles", getArticles);
+
+app.post("/api/articles/:article_id/comments", postNewComment);
 
 app.all("*", handleNotFound);
 

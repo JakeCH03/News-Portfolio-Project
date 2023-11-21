@@ -122,9 +122,52 @@ describe("/api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
-        expect(body.articles).toBeSortedBy("created_at",{
+        expect(body.articles).toBeSortedBy("created_at", {
           descending: true,
         });
       });
   });
+});
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("201: POST /api/articles/:article_id/comments should respond with 201 and the posted comment", () => {
+    const comment = { username: "lurker", comment: "some comment text" };
+    return request(app)
+      .post("/api/articles/3/comments")
+      .send(comment)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.comment[0].body).toBe("some comment text");
+      });
+  });
+  test("400: POST /api/articles/:article_id/comments should respond with Bad Request if the username provided is not a valid username", () => {
+    const comment = { username: "testUser", comment: "some comment text" };
+    return request(app)
+      .post("/api/articles/3/comments")
+      .send(comment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  test("400: POST /api/articles/:article_id/comments should response with Bad Request if the comment provided is not a string", () => {
+    const comment = { username: "testUser", comment: 12 };
+    return request(app)
+      .post("/api/articles/3/comments")
+      .send(comment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  // test("404: POST /api/articles/:article_id/comments should respond with Not Found if the article_id passed does not exist", () => {
+  //   const comment = { username: "lurker", comment: "some comment text" };
+  //   return request(app)
+  //     .post("/api/articles/10/comments")
+  //     .send(comment)
+  //     .expect(404)
+  //     .then(({ body }) => {
+  //       expect(body.msg).toBe("Not Found");
+  //     });
+  // });
 });

@@ -31,6 +31,18 @@ exports.getAllArticles = () => {
       } else {
         return rows;
       }
-    })
-    
+    });
+};
+
+exports.postComment = ({ username, comment }, id) => {
+  return db
+    .query(
+      `
+        INSERT INTO comments (body, author, article_id) 
+        VALUES ($1, $2, $3) 
+        RETURNING *;
+      `,
+      [comment, username, id]
+    )
+    .then(({rows}) => rows);
 };
