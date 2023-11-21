@@ -31,6 +31,19 @@ exports.getAllArticles = () => {
       } else {
         return rows;
       }
-    })
-    
+    });
+};
+
+exports.getAllComments = (id) => {
+  return db
+    .query(
+      `
+        SELECT * 
+        FROM comments 
+        WHERE comments.article_id=$1 
+        ORDER BY comments.created_at DESC
+      `,
+      [id]
+    )
+    .then(({ rows }) => rows);
 };
