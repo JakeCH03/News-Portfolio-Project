@@ -8,6 +8,7 @@ const { getApiTopics } = require("./controllers/api-topics-controller");
 const {
   getArticleById,
   getArticles,
+  getArticleComments,
 } = require("./controllers/api-articles-controller");
 const { invalidInput } = require("./sql-db-errors");
 
@@ -22,6 +23,8 @@ app.get("/api", getApiEndpoints);
 app.get("/api/articles/:article_id", getArticleById);
 
 app.get("/api/articles", getArticles);
+
+app.get("/api/articles/:article_id/comments", getArticleComments);
 
 app.all("*", handleNotFound);
 
