@@ -49,6 +49,9 @@ exports.getAllComments = (id) => {
 };
 
 exports.postComment = ({ username, comment }, id) => {
+  if (typeof comment !== "string") {
+    return Promise.reject({ status: 400, msg: "Bad Request" });
+  }
 
   return db
     .query(

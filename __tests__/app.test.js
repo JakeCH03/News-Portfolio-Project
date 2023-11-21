@@ -193,27 +193,27 @@ describe("POST /api/articles/:article_id/comments", () => {
       .expect(201)
       .then(({ body }) => {
         expect(body.comment[0]).toMatchObject({
-          comment_id: expect.any(Number),
+          comment_id: 19,
           body: expect.any(String),
-          article_id: expect.any(Number),
+          article_id: 3,
           author: expect.any(String),
           votes: expect.any(Number),
           created_at: expect.any(String),
         });
       });
   });
-  test("400: POST /api/articles/:article_id/comments should respond with Bad Request if the username provided is not a valid username", () => {
+  test("404: POST /api/articles/:article_id/comments should respond with Not Found if the username provided is not a valid username", () => {
     const comment = { username: "testUser", comment: "some comment text" };
     return request(app)
       .post("/api/articles/3/comments")
       .send(comment)
-      .expect(400)
+      .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("Bad Request");
+        expect(body.msg).toBe("Not Found");
       });
   });
   test("400: POST /api/articles/:article_id/comments should response with Bad Request if the comment provided is not a string", () => {
-    const comment = { username: "testUser", comment: 12 };
+    const comment = { username: "lurker", comment: 12 };
     return request(app)
       .post("/api/articles/3/comments")
       .send(comment)
@@ -230,6 +230,16 @@ describe("POST /api/articles/:article_id/comments", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Not Found");
+      });
+  });
+  test("400: POST /api/articles/:article_id/comments should respond with Bad Request if no username or comment is passed", () => {
+    const comment = {};
+    return request(app)
+      .post("/api/articles/3/comments")
+      .send(comment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
       });
   });
 });
