@@ -129,6 +129,61 @@ describe("/api/articles", () => {
   });
 });
 
+describe("/api/articles/:article_id/comments", () => {
+  test("200: GET /api/articles/:article_id/comments should return all comments for an article", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments.length).toBeGreaterThanOrEqual(11);
+        body.comments.forEach((body) => {
+          expect(body).toMatchObject({
+            comment_id: expect.any(Number),
+            body: expect.any(String),
+            article_id: expect.any(Number),
+            author: expect.any(String),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+          });
+        });
+      });
+  });
+  test("200: GET /api/articles/:article_id/comments should be sorted by date created in descending order (most recent first)", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments).toBeSortedBy("created_at", {
+          descending: true,
+        });
+      });
+  });
+  test("200: GET /api/articles/:article_id/comments should still return 200 with an empty array if the article exists, but has no comments", () => {
+    return request(app)
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments).toEqual([]);
+      });
+  });
+  test("404: GET /api/articles/:article_id/comments should return Not Found if the article_id passed does not exist", () => {
+    return request(app)
+      .get("/api/articles/19/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  test("400: GET /api/articles/hi/comments should return Bad Request if the id passed is not a valid id", () => {
+    return request(app)
+      .get("/api/articles/hi/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+});
+
 describe("POST /api/articles/:article_id/comments", () => {
   test("201: POST /api/articles/:article_id/comments should respond with 201 and the posted comment", () => {
     const comment = { username: "lurker", comment: "some comment text" };
@@ -160,14 +215,14 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("Bad Request");
       });
   });
-  // test("404: POST /api/articles/:article_id/comments should respond with Not Found if the article_id passed does not exist", () => {
-  //   const comment = { username: "lurker", comment: "some comment text" };
-  //   return request(app)
-  //     .post("/api/articles/10/comments")
-  //     .send(comment)
-  //     .expect(404)
-  //     .then(({ body }) => {
-  //       expect(body.msg).toBe("Not Found");
-  //     });
-  // });
+  test("404: POST /api/articles/:article_id/comments should respond with Not Found if the article_id passed does not exist", () => {
+    const comment = { username: "lurker", comment: "some comment text" };
+    return request(app)
+      .post("/api/articles/29/comments")
+      .send(comment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
 });

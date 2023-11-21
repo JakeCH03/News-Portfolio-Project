@@ -34,7 +34,22 @@ exports.getAllArticles = () => {
     });
 };
 
+exports.getAllComments = (id) => {
+  return db
+    .query(
+      `
+        SELECT * 
+        FROM comments 
+        WHERE comments.article_id=$1 
+        ORDER BY comments.created_at DESC
+      `,
+      [id]
+    )
+    .then(({ rows }) => rows);
+};
+
 exports.postComment = ({ username, comment }, id) => {
+
   return db
     .query(
       `
@@ -44,5 +59,5 @@ exports.postComment = ({ username, comment }, id) => {
       `,
       [comment, username, id]
     )
-    .then(({rows}) => rows);
+    .then(({ rows }) => rows);
 };
