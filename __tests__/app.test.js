@@ -192,7 +192,14 @@ describe("POST /api/articles/:article_id/comments", () => {
       .send(comment)
       .expect(201)
       .then(({ body }) => {
-        expect(body.comment[0].body).toBe("some comment text");
+        expect(body.comment[0]).toMatchObject({
+          comment_id: expect.any(Number),
+          body: expect.any(String),
+          article_id: expect.any(Number),
+          author: expect.any(String),
+          votes: expect.any(Number),
+          created_at: expect.any(String),
+        });
       });
   });
   test("400: POST /api/articles/:article_id/comments should respond with Bad Request if the username provided is not a valid username", () => {
