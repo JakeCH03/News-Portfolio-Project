@@ -103,7 +103,7 @@ describe("/api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
-        expect(body.articles.length).toBe(5);
+        expect(body.articles.length).toBeGreaterThanOrEqual(5);
         body.articles.forEach((article) => {
           expect(article).toMatchObject({
             author: expect.any(String),

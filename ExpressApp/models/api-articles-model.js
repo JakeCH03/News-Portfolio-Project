@@ -13,7 +13,7 @@ exports.getArticle = (id, next) => {
     .catch(next);
 };
 
-exports.getAllArticles = (next) => {
+exports.getAllArticles = () => {
   return db
     .query(
       `
@@ -21,7 +21,7 @@ exports.getAllArticles = (next) => {
     FROM articles
     INNER JOIN comments
     ON articles.article_id = comments.article_id
-    GROUP BY articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes
+    GROUP BY articles.article_id
     ORDER BY articles.created_at DESC;
     `
     )
@@ -32,5 +32,5 @@ exports.getAllArticles = (next) => {
         return rows;
       }
     })
-    .catch(next);
+    
 };
