@@ -2,8 +2,10 @@ const {
   getArticle,
   getAllArticles,
   getAllComments,
+  postComment,
   updateVotes,
 } = require("../models/api-articles-model");
+
 const { checkExists } = require("../models/api-checkExists-model");
 
 exports.getArticleById = (req, res, next) => {
@@ -18,6 +20,30 @@ exports.getArticles = (req, res) => {
   getAllArticles().then((articles) => {
     res.status(200).send({ articles });
   });
+};
+
+exports.postNewComment = (req, res, next) => {
+  const comment = req.body;
+  const id = req.params.article_id;
+
+  const commentPromises = [];
+
+  if (id) {
+    commentPromises.push(checkExists("articles", "article_id", id));
+  }
+
+  if (comment.username) {
+    commentPromises.push(checkExists("users", "username", comment.username));
+  }
+
+  commentPromises.push(postComment(comment, id));
+
+  Promise.all(commentPromises)
+    .then((resolvedPromises) => {
+      const comment = resolvedPromises[2];
+      res.status(201).send({ comment });
+    })
+    .catch(next);
 };
 
 exports.getArticleComments = (req, res, next) => {

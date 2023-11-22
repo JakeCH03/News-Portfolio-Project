@@ -9,3 +9,5 @@ exports.checkExists = (table, column, value) => {
     }
   });
 };
+
+

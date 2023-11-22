@@ -48,6 +48,24 @@ exports.getAllComments = (id) => {
     .then(({ rows }) => rows);
 };
 
+exports.postComment = ({ username, comment }, id) => {
+  if (typeof comment !== "string") {
+    return Promise.reject({ status: 400, msg: "Bad Request" });
+  }
+
+  return db
+    .query(
+      `
+        INSERT INTO comments (body, author, article_id) 
+        VALUES ($1, $2, $3) 
+        RETURNING *;
+      `,
+      [comment, username, id]
+    )
+    .then(({ rows }) => rows);
+};
+
+
 exports.updateVotes = ({ inc_votes }, id) => {
   if (inc_votes === undefined) {
     return Promise.reject({ status: 400, msg: "Bad Request" });
