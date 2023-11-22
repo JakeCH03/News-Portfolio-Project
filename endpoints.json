@@ -67,5 +67,21 @@
         }
       ]
     }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "Posts a comment to the given article_id and returns that comment after being added",
+    "queries": ["article_id", "username", "comment"],
+    "exampleResponse": {
+      "comment": [
+        {
+          "comment_id": 19,
+          "body": "some comment text",
+          "article_id": 3,
+          "author": "lurker" ,
+          "votes": 0,
+          "created_at": "2023-11-21T15:25:06.881Z"
+        }
+      ]
+    }
   }
 }

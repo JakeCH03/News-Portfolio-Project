@@ -183,3 +183,63 @@ describe("/api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("201: POST /api/articles/:article_id/comments should respond with 201 and the posted comment", () => {
+    const comment = { username: "lurker", comment: "some comment text" };
+    return request(app)
+      .post("/api/articles/3/comments")
+      .send(comment)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.comment[0]).toMatchObject({
+          comment_id: 19,
+          body: expect.any(String),
+          article_id: 3,
+          author: expect.any(String),
+          votes: expect.any(Number),
+          created_at: expect.any(String),
+        });
+      });
+  });
+  test("404: POST /api/articles/:article_id/comments should respond with Not Found if the username provided is not a valid username", () => {
+    const comment = { username: "testUser", comment: "some comment text" };
+    return request(app)
+      .post("/api/articles/3/comments")
+      .send(comment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  test("400: POST /api/articles/:article_id/comments should response with Bad Request if the comment provided is not a string", () => {
+    const comment = { username: "lurker", comment: 12 };
+    return request(app)
+      .post("/api/articles/3/comments")
+      .send(comment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  test("404: POST /api/articles/:article_id/comments should respond with Not Found if the article_id passed does not exist", () => {
+    const comment = { username: "lurker", comment: "some comment text" };
+    return request(app)
+      .post("/api/articles/29/comments")
+      .send(comment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  test("400: POST /api/articles/:article_id/comments should respond with Bad Request if no username or comment is passed", () => {
+    const comment = {};
+    return request(app)
+      .post("/api/articles/3/comments")
+      .send(comment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+});
