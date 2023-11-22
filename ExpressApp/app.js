@@ -10,6 +10,7 @@ const {
   getArticles,
   getArticleComments,
   postNewComment,
+  handleVoteCounter,
 } = require("./controllers/api-articles-controller");
 const { invalidInput } = require("./sql-db-errors");
 const { deleteComment } = require("./controllers/api-comments-controller");
@@ -33,6 +34,8 @@ app.get("/api/articles/:article_id/comments", getArticleComments);
 app.post("/api/articles/:article_id/comments", postNewComment);
 
 app.delete("/api/comments/:comment_id", deleteComment);
+
+app.patch("/api/articles/:article_id", handleVoteCounter);
 
 app.all("*", handleNotFound);
 

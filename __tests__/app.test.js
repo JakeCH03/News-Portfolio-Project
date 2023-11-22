@@ -270,3 +270,66 @@ describe("DELETE /api/comments/:comment_id", () => {
       });
   });
 });
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("200: PATCH /api/articles/:article_id should respond with an updated article with votes increased/decreased by provided value", () => {
+    const votes = { inc_votes: 5 };
+    return request(app)
+      .patch("/api/articles/4")
+      .send(votes)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article.votes).toBe(5);
+        expect(body.article).toMatchObject({
+          article_id: expect.any(Number),
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url: expect.any(String),
+        });
+      });
+  });
+  test("404: Should return Not Found if article_id passed does not exist", () => {
+    const votes = { inc_votes: 5 };
+    return request(app)
+      .patch("/api/articles/123")
+      .send(votes)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  test("400: Should return Bad Request if passed votes is not a number", () => {
+    const votes = { inc_votes: "hello" };
+    return request(app)
+      .patch("/api/articles/4")
+      .send(votes)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  test("400: Should return bad request if the property in the passed array is not called inc_votes", () => {
+    const votes = { number: 12 };
+    return request(app)
+      .patch("/api/articles/4")
+      .send(votes)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  test("400: Should return bad request if the passed object is empty", () => {
+    const votes = {};
+    return request(app)
+      .patch("/api/articles/4")
+      .send(votes)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+});

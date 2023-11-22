@@ -64,3 +64,22 @@ exports.postComment = ({ username, comment }, id) => {
     )
     .then(({ rows }) => rows);
 };
+
+
+exports.updateVotes = ({ inc_votes }, id) => {
+  if (inc_votes === undefined) {
+    return Promise.reject({ status: 400, msg: "Bad Request" });
+  }
+
+  return db
+    .query(
+      `
+  UPDATE articles
+  SET votes = votes + $1
+  WHERE article_id = $2
+  RETURNING *
+  `,
+      [inc_votes, id]
+    )
+    .then(({ rows }) => rows);
+};
