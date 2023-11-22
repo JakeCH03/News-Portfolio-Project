@@ -83,5 +83,10 @@
         }
       ]
     }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "Deletes a given comment by id, responds with 204",
+    "queries": ["comment_id"],
+    "exampleResponse": {}
   }
 }

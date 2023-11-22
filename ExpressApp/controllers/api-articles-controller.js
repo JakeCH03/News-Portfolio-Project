@@ -5,10 +5,7 @@ const {
   postComment,
 } = require("../models/api-articles-model");
 
-const {
-  checkExists,
-  checkUserExists,
-} = require("../models/api-checkExists-model");
+const { checkExists } = require("../models/api-checkExists-model");
 
 exports.getArticleById = (req, res, next) => {
   getArticle(req.params.article_id)
@@ -35,9 +32,7 @@ exports.postNewComment = (req, res, next) => {
   }
 
   if (comment.username) {
-    commentPromises.push(
-      checkUserExists("users", "username", comment.username)
-    );
+    commentPromises.push(checkExists("users", "username", comment.username));
   }
 
   commentPromises.push(postComment(comment, id));
