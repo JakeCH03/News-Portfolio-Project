@@ -71,7 +71,7 @@
   "PATCH /api/articles/:article_id": {
     "description": "returns updated article with votes increased/decreased by given amount",
     "queries": ["votes", "article_id"],
-    "exampleBody": [{"inc_votes": 1}],
+    "exampleBody": {"inc_votes": 1},
     "exampleResponse": {
       "article": [
         {
