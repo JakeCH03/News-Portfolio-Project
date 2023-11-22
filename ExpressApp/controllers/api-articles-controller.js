@@ -52,7 +52,7 @@ exports.handleVoteCounter = (req, res, next) => {
   Promise.all(articlePromises)
     .then((resolvedPromises) => {
       const article = resolvedPromises[1];
-      res.status(200).send({ article });
+      res.status(200).send({ article: article[0] });
     })
     .catch(next);
 };

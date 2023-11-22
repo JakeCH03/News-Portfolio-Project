@@ -192,8 +192,8 @@ describe("PATCH /api/articles/:article_id", () => {
       .send(votes)
       .expect(200)
       .then(({ body }) => {
-        expect(body.article[0].votes).toBe(5);
-        expect(body.article[0]).toMatchObject({
+        expect(body.article.votes).toBe(5);
+        expect(body.article).toMatchObject({
           article_id: expect.any(Number),
           title: expect.any(String),
           topic: expect.any(String),
@@ -217,6 +217,26 @@ describe("PATCH /api/articles/:article_id", () => {
   });
   test("400: Should return Bad Request if passed votes is not a number", () => {
     const votes = { inc_votes: "hello" };
+    return request(app)
+      .patch("/api/articles/4")
+      .send(votes)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  test("400: Should return bad request if the property in the passed array is not called inc_votes", () => {
+    const votes = { number: 12 };
+    return request(app)
+      .patch("/api/articles/4")
+      .send(votes)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  test("400: Should return bad request if the passed object is empty", () => {
+    const votes = {};
     return request(app)
       .patch("/api/articles/4")
       .send(votes)
