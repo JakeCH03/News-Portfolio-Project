@@ -12,6 +12,7 @@ const {
   postNewComment,
 } = require("./controllers/api-articles-controller");
 const { invalidInput } = require("./sql-db-errors");
+const { deleteComment } = require("./controllers/api-comments-controller");
 
 const app = express();
 
@@ -30,6 +31,8 @@ app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id/comments", getArticleComments);
 
 app.post("/api/articles/:article_id/comments", postNewComment);
+
+app.delete("/api/comments/:comment_id", deleteComment);
 
 app.all("*", handleNotFound);
 
