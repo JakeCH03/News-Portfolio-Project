@@ -16,10 +16,12 @@ exports.getArticleById = (req, res, next) => {
     .catch(next);
 };
 
-exports.getArticles = (req, res) => {
-  getAllArticles().then((articles) => {
-    res.status(200).send({ articles });
-  });
+exports.getArticles = (req, res, next) => {
+  getAllArticles(req.query.topic)
+    .then((articles) => {
+      res.status(200).send({ articles });
+    })
+    .catch(next);
 };
 
 exports.postNewComment = (req, res, next) => {
