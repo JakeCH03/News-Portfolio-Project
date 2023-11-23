@@ -16,10 +16,29 @@ exports.getArticleById = (req, res, next) => {
     .catch(next);
 };
 
-exports.getArticles = (req, res) => {
-  getAllArticles().then((articles) => {
-    res.status(200).send({ articles });
-  });
+exports.getArticles = (req, res, next) => {
+  const topic = req.query.topic;
+
+  const articlesPromises = [];
+
+  if (topic) {
+    articlesPromises.push(checkExists("topics", "slug", topic));
+  }
+
+  articlesPromises.push(getAllArticles(topic));
+
+  Promise.all(articlesPromises)
+    .then((resolvedPromises) => {
+      let articles = "";
+      if (resolvedPromises.length > 1) {
+        articles = resolvedPromises[resolvedPromises.length - 1];
+      } else {
+        articles = resolvedPromises[0];
+      }
+
+      res.status(200).send({ articles });
+    })
+    .catch(next);
 };
 
 exports.postNewComment = (req, res, next) => {

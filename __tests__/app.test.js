@@ -358,3 +358,32 @@ describe("GET /api/users", () => {
       });
   });
 });
+
+describe("200: GET /api/articles?topic=[input] should respond with all articles with a topic matching the query", () => {
+  test("200: GET /api/articles?topic=mitch should respond with all articles with a topic of mitch", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body }) => {
+        body.articles.forEach((article) => {
+          expect(article.topic).toBe("mitch");
+        });
+      });
+  });
+  test("404: GET /api/articles?topic=[non-existent topic] should respond with Not Found if passed a topic that doesn't exist", () => {
+    return request(app)
+      .get("/api/articles?topic=pasta")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  test("200: GET /api/articles?topic=paper should respond with an empty array if the topic exists but has no articles", () => {
+    return request(app)
+      .get("/api/articles?topic=paper")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toEqual([]);
+      });
+  });
+});
