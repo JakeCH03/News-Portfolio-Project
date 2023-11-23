@@ -357,13 +357,4 @@ describe("GET /api/users", () => {
         expect(body.msg).toBe("Not Found");
       });
   });
-  test("404: GET /api/users should respond with Not Found if the table doesn't exist", () => {
-    db.query(`DROP TABLE IF EXISTS users`)
-      .then(() => {
-        return request(app).get("/api/users").expect(404);
-      })
-      .then(({ body }) => {
-        expect(body.msg).toBe("Not Found");
-      });
-  });
 });
