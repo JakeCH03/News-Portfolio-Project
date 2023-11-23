@@ -26,13 +26,7 @@ exports.getAllArticles = (topic) => {
   queryString += ` GROUP BY articles.article_id
                    ORDER BY articles.created_at DESC;`;
 
-  return db.query(queryString).then(({ rows }) => {
-    if (rows.length === 0) {
-      return Promise.reject({ status: 404, msg: "Not Found" });
-    } else {
-      return rows;
-    }
-  });
+  return db.query(queryString).then(({ rows }) => rows);
 };
 
 exports.getAllComments = (id) => {

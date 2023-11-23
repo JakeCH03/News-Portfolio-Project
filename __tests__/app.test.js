@@ -360,12 +360,12 @@ describe("GET /api/users", () => {
 });
 
 describe("200: GET /api/articles?topic=[input] should respond with all articles with a topic matching the query", () => {
-  test("200: GET /api/articles?topic=cats should respond with all articles with a topic of cats", () => {
+  test.only("200: GET /api/articles?topic=mitch should respond with all articles with a topic of mitch", () => {
     return request(app)
       .get("/api/articles?topic=mitch")
       .expect(200)
       .then(({ body }) => {
-        console.log(body);
+        console.log(body.articles)
         body.articles.forEach((article) => {
           expect(article.topic).toBe("mitch");
         });
@@ -379,12 +379,12 @@ describe("200: GET /api/articles?topic=[input] should respond with all articles 
         expect(body.msg).toBe("Not Found");
       });
   });
-  test("404: GET /api/articles?topic=paper should respond with Not Found if query points to a topic that exists, but has no articles", () => {
+  test("200: GET /api/articles?topic=paper should respond with an empty array if the topic exists but has no articles", () => {
     return request(app)
       .get("/api/articles?topic=paper")
-      .expect(404)
+      .expect(2)
       .then(({ body }) => {
-        expect(body.msg).toBe("Not Found");
+        expect(body.article).toEqual([]);
       });
   });
 });
