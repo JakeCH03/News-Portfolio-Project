@@ -65,7 +65,6 @@ exports.postComment = ({ username, comment }, id) => {
     .then(({ rows }) => rows);
 };
 
-
 exports.updateVotes = ({ inc_votes }, id) => {
   if (inc_votes === undefined) {
     return Promise.reject({ status: 400, msg: "Bad Request" });
