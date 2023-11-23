@@ -333,3 +333,37 @@ describe("PATCH /api/articles/:article_id", () => {
       });
   });
 });
+
+describe("GET /api/users", () => {
+  test("200: GET /api/users should respond with an array of objects, each object should have username, name and avatar_url properties", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        body.users.forEach((user) => {
+          expect(user).toMatchObject({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
+        });
+      });
+  });
+  test("404: GET /api/usrs should respond with Not Found if incorrect path is given", () => {
+    return request(app)
+      .get("/api/usrs")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  test("404: GET /api/users should respond with Not Found if the table doesn't exist", () => {
+    db.query(`DROP TABLE IF EXISTS users`)
+      .then(() => {
+        return request(app).get("/api/users").expect(404);
+      })
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+});
