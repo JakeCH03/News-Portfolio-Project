@@ -359,14 +359,15 @@ describe("GET /api/users", () => {
   });
 });
 
-describe.only("200: GET /api/articles?topic=[input] should respond with all articles with a topic matching the query", () => {
+describe("200: GET /api/articles?topic=[input] should respond with all articles with a topic matching the query", () => {
   test("200: GET /api/articles?topic=cats should respond with all articles with a topic of cats", () => {
     return request(app)
-      .get("/api/articles?topic=cats")
+      .get("/api/articles?topic=mitch")
       .expect(200)
       .then(({ body }) => {
+        console.log(body)
         body.articles.forEach((article) => {
-          expect(article.topic).toBe("cats");
+          expect(article.topic).toBe("mitch");
         });
       });
   });
