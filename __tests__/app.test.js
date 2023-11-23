@@ -365,7 +365,7 @@ describe("200: GET /api/articles?topic=[input] should respond with all articles 
       .get("/api/articles?topic=mitch")
       .expect(200)
       .then(({ body }) => {
-        console.log(body)
+        console.log(body);
         body.articles.forEach((article) => {
           expect(article.topic).toBe("mitch");
         });
@@ -374,6 +374,14 @@ describe("200: GET /api/articles?topic=[input] should respond with all articles 
   test("404: GET /api/articles?topic=[non-existent topic] should respond with Not Found if passed a topic that doesn't exist", () => {
     return request(app)
       .get("/api/articles?topic=pasta")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+  test("404: GET /api/articles?topic=paper should respond with Not Found if query points to a topic that exists, but has no articles", () => {
+    return request(app)
+      .get("/api/articles?topic=paper")
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Not Found");
