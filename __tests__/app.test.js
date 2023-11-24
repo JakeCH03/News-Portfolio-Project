@@ -406,3 +406,62 @@ describe("200: GET /api/articles?topic=[input] should respond with all articles 
       });
   });
 });
+
+describe("200: GET /api/articles?[sort_by/order] should respond with all articles sorted by a valid column (default created_at), ordered by the given order (default descending", () => {
+  test("200: /get/articles should respond with all articles sorted by created_at in descending order", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy("created_at", {
+          descending: true,
+        });
+      });
+  });
+  test("200: /get/articles?sort_by=topic should respond with all articles sorted by topics in descending order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=topic")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy("topic", {
+          descending: true,
+        });
+      });
+  });
+  test("200: /get/articles?order=ASC should respond with all articles sorted by created_at in ascending order", () => {
+    return request(app)
+      .get("/api/articles?order=ASC")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy("created_at", {
+          ascending: true,
+        });
+      });
+  });
+  test("200: /get/articles?sort_by=topic&order=ASC should respond with all articles sorted by topic in ascending order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=topic&order=ASC")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy("topic", {
+          ascending: true,
+        });
+      });
+  });
+  test("400: /get/articles?order=[not ASC or DESC] should respond with Bad Request if not passed ASC or DESC", () => {
+    return request(app)
+      .get("/api/articles?order=DROP TABLE IF EXISTS articles;")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  test("404: /get/articles?sort_by=[value] should respond with Not Found if the column does not exist", () => {
+    return request(app)
+      .get("/api/articles?sort_by=animals")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+});

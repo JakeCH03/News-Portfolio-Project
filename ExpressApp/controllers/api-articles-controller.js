@@ -6,12 +6,12 @@ const {
   updateVotes,
 } = require("../models/api-articles-model");
 
-const { checkExists } = require("../models/api-checkExists-model");
+const { checkExists, checkExistsColumn } = require("../models/api-checkExists-model");
 
 exports.getArticleById = (req, res, next) => {
   getArticle(req.params.article_id)
     .then((result) => {
-      const article  = result[0]
+      const article = result[0];
       res.status(200).send({ article });
     })
     .catch(next);
@@ -19,6 +19,8 @@ exports.getArticleById = (req, res, next) => {
 
 exports.getArticles = (req, res, next) => {
   const topic = req.query.topic;
+  const sort = req.query.sort_by;
+  const order = req.query.order;
 
   const articlesPromises = [];
 
@@ -26,7 +28,11 @@ exports.getArticles = (req, res, next) => {
     articlesPromises.push(checkExists("topics", "slug", topic));
   }
 
-  articlesPromises.push(getAllArticles(topic));
+  if (sort) {
+    articlesPromises.push(checkExistsColumn("articles", sort));
+  }
+
+  articlesPromises.push(getAllArticles(topic, sort, order));
 
   Promise.all(articlesPromises)
     .then((resolvedPromises) => {
