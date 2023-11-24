@@ -1,9 +1,10 @@
+const format = require("pg-format");
 const db = require("../../db/connection");
 
 exports.getArticle = (id, next) => {
   return db
     .query(
-      `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.body, articles.created_at, articles.votes, article_img_url, COUNT(comment_id) as comment_count 
+      `SELECT articles.author, articles.title, articles.article_id, articles.topic,  articles.body, articles.created_at, articles.votes, article_img_url, COUNT(comment_id) as comment_count 
             FROM articles 
             LEFT JOIN comments
             ON articles.article_id = comments.article_id
@@ -21,18 +22,25 @@ exports.getArticle = (id, next) => {
     .catch(next);
 };
 
-exports.getAllArticles = (topic) => {
+exports.getAllArticles = (topic, sort = "created_at", order = "DESC") => {
   let queryString = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, article_img_url, COUNT(comment_id) as comment_count
                      FROM articles
-                     INNER JOIN comments
+                     LEFT JOIN comments
                      ON articles.article_id = comments.article_id`;
+
+  if (!["ASC", "DESC"].includes(order)) {
+    return Promise.reject({ status: 400, msg: "Bad Request" });
+  }
 
   if (topic) {
     queryString += ` WHERE articles.topic='${topic}'`;
   }
 
-  queryString += ` GROUP BY articles.article_id
-                   ORDER BY articles.created_at DESC;`;
+  queryString += format(
+    ` GROUP BY articles.article_id ORDER BY %I %s`,
+    sort,
+    order
+  );
 
   return db.query(queryString).then(({ rows }) => rows);
 };

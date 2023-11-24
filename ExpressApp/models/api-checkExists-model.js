@@ -10,4 +10,7 @@ exports.checkExists = (table, column, value) => {
   });
 };
 
-
+exports.checkExistsColumn = (table, column) => {
+  const queryString = format(`SELECT %I FROM %I`, column, table);
+  return db.query(queryString)
+};
