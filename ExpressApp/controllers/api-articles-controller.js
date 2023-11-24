@@ -10,7 +10,8 @@ const { checkExists } = require("../models/api-checkExists-model");
 
 exports.getArticleById = (req, res, next) => {
   getArticle(req.params.article_id)
-    .then((article) => {
+    .then((result) => {
+      const article  = result[0]
       res.status(200).send({ article });
     })
     .catch(next);

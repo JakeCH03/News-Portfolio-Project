@@ -66,7 +66,7 @@ describe("/api/articles/:article_id", () => {
       .get("/api/articles/4")
       .expect(200)
       .then(({ body }) => {
-        expect(body.article[0]).toMatchObject({
+        expect(body.article).toMatchObject({
           article_id: 4,
           title: "Student SUES Mitch!",
           topic: "mitch",
@@ -93,6 +93,25 @@ describe("/api/articles/:article_id", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Bad Request");
+      });
+  });
+  test("200: GET /api/articles/:article_id UPDATED should return the correct object from the id given also with a comment count", () => {
+    return request(app)
+      .get("/api/articles/4")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toMatchObject({
+          article_id: 4,
+          title: "Student SUES Mitch!",
+          topic: "mitch",
+          author: "rogersop",
+          body: "We all love Mitch and his wonderful, unique typing style. However, the volume of his typing has ALLEGEDLY burst another students eardrums, and they are now suing for damages",
+          created_at: "2020-05-06T01:14:00.000Z",
+          votes: 0,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          comment_count: "0",
+        });
       });
   });
 });
