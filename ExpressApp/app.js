@@ -15,7 +15,7 @@ const {
 const { invalidInput } = require("./sql-db-errors");
 const { deleteComment } = require("./controllers/api-comments-controller");
 const { getAllUsers } = require("./controllers/api-users-controller");
-const { cors } = require("cors");
+const cors = require("cors");
 
 const app = express();
 
